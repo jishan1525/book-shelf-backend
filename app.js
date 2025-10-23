@@ -9,9 +9,6 @@ const cors = require("cors");
 
 const app = express();
 
-// Middleware to parse JSON body
-
-
 app.use(express.json());
 const corsOptions = {
   origin: "*",
@@ -79,7 +76,7 @@ app.get("/books/:id", async (req, res) => {
 });
 
 
-//get boook by genre
+// GET: Single book by Genre function
 
 const getBookByGenre = async (selectedgenre) => {
     try {
@@ -91,12 +88,13 @@ const getBookByGenre = async (selectedgenre) => {
     
 }
 
+// GET: Single book by Genre using ID
 app.get("/genre/:id/books", async (req, res) => {
     const genreId = req.params.id;
-    let genreName; // Declare variable here to give it proper scope
+    let genreName; 
 
     try {
-        // 1. Find the Genre (AWAIT is essential here)
+        // 1. Find the Genre
         const genreObject = await Genre.findById(genreId);
         
         if (!genreObject) {
@@ -119,7 +117,7 @@ app.get("/genre/:id/books", async (req, res) => {
         if (bookList && bookList.length > 0) { // Check if array has content
             res.json(bookList);
         } else {
-            // Use 404 (Not Found) for "no results" rather than 401 (Unauthorized)
+           
             res.status(404).json({ error: `No books found for genre: ${genreName}` });
         }
     } catch (error) {
@@ -129,14 +127,8 @@ app.get("/genre/:id/books", async (req, res) => {
     }
 });
 
-app.get("/genre", async (req, res) => {
-  try {
-    const genre = await Genre.find();
-    res.status(200).json({ data: genre });
-  } catch (error) {
-    res.status(500).json({ message: "Failed to fetch genre", error: error.message });
-  }
-});
+// POST : POST to add Genre 
+
 
 app.post("/genre",async(req,res)=>{
     try {
@@ -156,6 +148,8 @@ app.post("/genre",async(req,res)=>{
   }
 })
 
+
+//
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
